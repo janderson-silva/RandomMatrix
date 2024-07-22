@@ -9,7 +9,7 @@ uses
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client, Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls, Vcl.StdCtrls,
   Vcl.Samples.Spin, System.Generics.Collections, Xml.XMLDoc, Xml.XMLIntf,
-  ComObj, DataSet.Serialize, System.JSON;
+  ComObj, DataSet.Serialize, System.JSON, Vcl.CheckLst;
 
 type
   TfrmPrincipal = class(TForm)
@@ -34,6 +34,7 @@ type
     procedure pnlExportarCSVClick(Sender: TObject);
     procedure pnlExportarJSONClick(Sender: TObject);
     procedure pnlExportarXMLClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
     procedure CriarCamposMemTable;
@@ -42,6 +43,8 @@ type
     procedure ExportarParaXLS(memTable: TFDMemTable; const arquivoCSV: string);
     procedure ExportarParaJSON(memTable: TFDMemTable; const arquivoJSON: string);
     procedure ExportarParaXML(memTable: TFDMemTable; const arquivoXML: string);
+
+    procedure DBGrid1DrawColumnCell(Sender: TObject; const Rect: TRect;DataCol: Integer; Column: TColumn; State: TGridDrawState);
   public
     { Public declarations }
   end;
@@ -64,6 +67,9 @@ begin
   FDMemTable1.Close;
   FDMemTable1.FieldDefs.Clear;
 
+  // Criar campo para checkbox (marcado ou não)
+  FDMemTable1.FieldDefs.Add('Utilizado', ftBoolean);
+
   // Criar os campos de acordo com a quantidade informada
   for I := 1 to spnQtdColuna.Value do
   begin
@@ -77,13 +83,20 @@ begin
   // Definir a estrutura da tabela em memória
   FDMemTable1.CreateDataSet;
 
-  //mudar o nome dos campos ja criados
+  // Mudar o nome dos campos já criados
   for I := 0 to FDMemTable1.FieldCount - 1 do
   begin
-    //mudar o nome dos campos
-    FDMemTable1.Fields[I].DisplayLabel := (I + 1).ToString + '°';
-    FDMemTable1.Fields[I].DisplayWidth := 5;
-    FDMemTable1.Fields[I].Alignment    := taCenter;
+    if I = 0 then
+    begin
+      FDMemTable1.Fields[I].DisplayLabel := 'Utilizado';
+      FDMemTable1.Fields[I].Alignment    := taCenter;
+    end
+    else
+    begin
+      FDMemTable1.Fields[I].DisplayLabel := (I).ToString + '°';
+      FDMemTable1.Fields[I].DisplayWidth := 5;
+      FDMemTable1.Fields[I].Alignment    := taCenter;
+    end;
   end;
 end;
 
@@ -108,6 +121,45 @@ begin
     l := l + 1;
   end;
   ExcApp.WorkBooks[1].SaveAs(arquivoCSV);
+end;
+
+procedure TfrmPrincipal.DBGrid1DrawColumnCell(Sender: TObject;
+  const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
+var
+  CheckBoxRect: TRect;
+  CheckBoxState: TCheckBoxState;
+  CheckBoxSize: Integer;
+  CheckBoxLeft: Integer;
+begin
+  // Verifica se está desenhando a coluna do campo Utilizado
+  if Column.Field.FieldName = 'Utilizado' then
+  begin
+    // Calcula o tamanho do CheckBox
+    CheckBoxSize := 14; // Tamanho padrão de um CheckBox
+
+    // Calcula a posição do CheckBox na célula
+    CheckBoxLeft := Rect.Left + (Rect.Width - CheckBoxSize) div 2;
+
+    // Define o retângulo para o CheckBox
+    CheckBoxRect := Rect;
+    CheckBoxRect.Left := CheckBoxLeft;
+    CheckBoxRect.Right := CheckBoxRect.Left + CheckBoxSize;
+
+    // Desenha o fundo da célula
+    DBGrid1.Canvas.FillRect(Rect);
+
+    // Desenha o CheckBox baseado no valor do campo Utilizado
+    if Column.Field.AsBoolean then
+      CheckBoxState := cbChecked
+    else
+      CheckBoxState := cbUnchecked;
+
+    DrawFrameControl(DBGrid1.Canvas.Handle, CheckBoxRect,
+      DFC_BUTTON, DFCS_BUTTONCHECK or DFCS_CHECKED * Ord(Column.Field.AsBoolean));
+
+    // Evita que o texto padrão do campo seja desenhado
+    //Column.DefaultDraw := False;
+  end;
 end;
 
 procedure TfrmPrincipal.ExportarParaJSON(memTable: TFDMemTable;
@@ -153,6 +205,12 @@ begin
   xmlDoc.SaveToFile(arquivoXML);
 end;
 
+procedure TfrmPrincipal.FormCreate(Sender: TObject);
+begin
+  // Atribui o evento OnDrawColumnCell do DBGrid
+  DBGrid1.OnDrawColumnCell := DBGrid1DrawColumnCell;
+end;
+
 procedure TfrmPrincipal.GenerateRandomNumbersNew;
 var
   MinValue: Integer;
@@ -192,7 +250,7 @@ begin
       Numbers.Clear;
       UsedNumbers.Clear; // Limpa o dicionário a cada nova linha
 
-      while Numbers.Count < NumColumns do
+      while Numbers.Count < NumColumns - 1 do // Menos 1 para o campo de checkbox
       begin
         RandomNumber := Random(MaxValue - MinValue + 1) + MinValue;
 
@@ -212,9 +270,12 @@ begin
       // Preenche as colunas com os números ordenados gerados
       for J := 0 to Numbers.Count - 1 do
       begin
-        if J < FDMemTable1.FieldCount then
-          FDMemTable1.Fields[J].AsString := Format('%2.2d', [Numbers[J]]);
+        if J < FDMemTable1.FieldCount - 1 then // Ignorar o último campo (checkbox)
+          FDMemTable1.Fields[J + 1].AsString := Format('%2.2d', [Numbers[J]]);
       end;
+
+      // Define o campo de checkbox como não utilizado
+      FDMemTable1.FieldByName('Utilizado').AsBoolean := False;
 
       FDMemTable1.Post;
     end;
@@ -223,6 +284,7 @@ begin
     UsedNumbers.Free;
   end;
 end;
+
 
 procedure TfrmPrincipal.pnlExportarXMLClick(Sender: TObject);
 begin
