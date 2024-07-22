@@ -34,7 +34,9 @@ type
     procedure pnlExportarCSVClick(Sender: TObject);
     procedure pnlExportarJSONClick(Sender: TObject);
     procedure pnlExportarXMLClick(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
+    procedure DBGrid1CellClick(Column: TColumn);
+    procedure DBGrid1DrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
   private
     { Private declarations }
     procedure CriarCamposMemTable;
@@ -43,8 +45,6 @@ type
     procedure ExportarParaXLS(memTable: TFDMemTable; const arquivoCSV: string);
     procedure ExportarParaJSON(memTable: TFDMemTable; const arquivoJSON: string);
     procedure ExportarParaXML(memTable: TFDMemTable; const arquivoXML: string);
-
-    procedure DBGrid1DrawColumnCell(Sender: TObject; const Rect: TRect;DataCol: Integer; Column: TColumn; State: TGridDrawState);
   public
     { Public declarations }
   end;
@@ -123,6 +123,16 @@ begin
   ExcApp.WorkBooks[1].SaveAs(arquivoCSV);
 end;
 
+procedure TfrmPrincipal.DBGrid1CellClick(Column: TColumn);
+begin
+  if Column.Field.FieldName = 'Utilizado' then
+  begin
+    FDMemTable1.Edit;
+    FDMemTable1.FieldByName('Utilizado').AsBoolean := not FDMemTable1.FieldByName('Utilizado').AsBoolean;
+    FDMemTable1.Post;
+  end;
+end;
+
 procedure TfrmPrincipal.DBGrid1DrawColumnCell(Sender: TObject;
   const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
 var
@@ -131,6 +141,17 @@ var
   CheckBoxSize: Integer;
   CheckBoxLeft: Integer;
 begin
+  if FDMemTable1.IsEmpty then
+    Exit;
+
+  case FDMemTable1.FieldByName('Utilizado').AsBoolean of
+    True: Dbgrid1.Canvas.Brush.Color:= clGreen;
+    False: Dbgrid1.Canvas.Brush.Color:= clRed;
+  end;
+  Dbgrid1.Canvas.Font.Style := [fsBold];
+  Dbgrid1.Canvas.FillRect(Rect);
+  Dbgrid1.DefaultDrawColumnCell(Rect, DataCol, Column, State);
+
   // Verifica se está desenhando a coluna do campo Utilizado
   if Column.Field.FieldName = 'Utilizado' then
   begin
@@ -154,11 +175,7 @@ begin
     else
       CheckBoxState := cbUnchecked;
 
-    DrawFrameControl(DBGrid1.Canvas.Handle, CheckBoxRect,
-      DFC_BUTTON, DFCS_BUTTONCHECK or DFCS_CHECKED * Ord(Column.Field.AsBoolean));
-
-    // Evita que o texto padrão do campo seja desenhado
-    //Column.DefaultDraw := False;
+    DrawFrameControl(DBGrid1.Canvas.Handle, CheckBoxRect, DFC_BUTTON, DFCS_BUTTONCHECK or DFCS_CHECKED * Ord(Column.Field.AsBoolean));
   end;
 end;
 
@@ -203,12 +220,6 @@ begin
   end;
 
   xmlDoc.SaveToFile(arquivoXML);
-end;
-
-procedure TfrmPrincipal.FormCreate(Sender: TObject);
-begin
-  // Atribui o evento OnDrawColumnCell do DBGrid
-  DBGrid1.OnDrawColumnCell := DBGrid1DrawColumnCell;
 end;
 
 procedure TfrmPrincipal.GenerateRandomNumbersNew;
