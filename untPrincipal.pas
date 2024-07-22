@@ -9,7 +9,7 @@ uses
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client, Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls, Vcl.StdCtrls,
   Vcl.Samples.Spin, System.Generics.Collections, Xml.XMLDoc, Xml.XMLIntf,
-  REST.Json, System.IOUtils, System.JSON, ComObj;
+  ComObj, DataSet.Serialize, System.JSON;
 
 type
   TfrmPrincipal = class(TForm)
@@ -27,13 +27,13 @@ type
     Label4: TLabel;
     spnQtdColuna: TSpinEdit;
     Panel2: TPanel;
-    Panel3: TPanel;
-    Panel4: TPanel;
-    Panel5: TPanel;
+    pnlExportarXML: TPanel;
+    pnlExportarCSV: TPanel;
+    pnlExportarJSON: TPanel;
     procedure pnlGerarClick(Sender: TObject);
-    procedure Panel4Click(Sender: TObject);
-    procedure Panel5Click(Sender: TObject);
-    procedure Panel3Click(Sender: TObject);
+    procedure pnlExportarCSVClick(Sender: TObject);
+    procedure pnlExportarJSONClick(Sender: TObject);
+    procedure pnlExportarXMLClick(Sender: TObject);
   private
     { Private declarations }
     procedure CriarCamposMemTable;
@@ -113,10 +113,18 @@ end;
 procedure TfrmPrincipal.ExportarParaJSON(memTable: TFDMemTable;
   const arquivoJSON: string);
 var
-  jsonString: string;
+  LJSONArray: TJSONArray;
+  Arquivo: TStringList;
 begin
-  jsonString := TJson.ObjectToJsonString(memTable);
-  TFile.WriteAllText(arquivoJSON, jsonString);
+  LJSONArray := memTable.ToJSONArray;
+  Arquivo := TStringList.Create;
+  try
+    Arquivo.Add(LJSONArray.Format);
+    Arquivo.SaveToFile(arquivoJSON);
+  finally
+    LJSONArray.Free;
+    Arquivo.Free;
+  end;
 end;
 
 procedure TfrmPrincipal.ExportarParaXML(memTable: TFDMemTable;
@@ -216,19 +224,22 @@ begin
   end;
 end;
 
-procedure TfrmPrincipal.Panel3Click(Sender: TObject);
+procedure TfrmPrincipal.pnlExportarXMLClick(Sender: TObject);
 begin
   ExportarParaXML(FDMemTable1, GetCurrentDir+'\numeros.xml');
+  ShowMessage('Exportação concluída!');
 end;
 
-procedure TfrmPrincipal.Panel4Click(Sender: TObject);
+procedure TfrmPrincipal.pnlExportarCSVClick(Sender: TObject);
 begin
   ExportarParaXLS(FDMemTable1, GetCurrentDir+'\numeros.xls');
+  ShowMessage('Exportação concluída!');
 end;
 
-procedure TfrmPrincipal.Panel5Click(Sender: TObject);
+procedure TfrmPrincipal.pnlExportarJSONClick(Sender: TObject);
 begin
   ExportarParaJSON(FDMemTable1, GetCurrentDir+'\numeros.json');
+  ShowMessage('Exportação concluída!');
 end;
 
 procedure TfrmPrincipal.pnlGerarClick(Sender: TObject);

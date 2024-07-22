@@ -136,10 +136,7 @@ object frmPrincipal: TfrmPrincipal
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitLeft = 560
-    ExplicitTop = 192
-    ExplicitWidth = 185
-    object Panel3: TPanel
+    object pnlExportarXML: TPanel
       AlignWithMargins = True
       Left = 781
       Top = 3
@@ -159,9 +156,9 @@ object frmPrincipal: TfrmPrincipal
       ParentFont = False
       TabOrder = 0
       StyleElements = []
-      OnClick = Panel3Click
+      OnClick = pnlExportarXMLClick
     end
-    object Panel4: TPanel
+    object pnlExportarCSV: TPanel
       AlignWithMargins = True
       Left = 469
       Top = 3
@@ -181,10 +178,9 @@ object frmPrincipal: TfrmPrincipal
       ParentFont = False
       TabOrder = 1
       StyleElements = []
-      OnClick = Panel4Click
-      ExplicitLeft = 625
+      OnClick = pnlExportarCSVClick
     end
-    object Panel5: TPanel
+    object pnlExportarJSON: TPanel
       AlignWithMargins = True
       Left = 625
       Top = 3
@@ -204,7 +200,7 @@ object frmPrincipal: TfrmPrincipal
       ParentFont = False
       TabOrder = 2
       StyleElements = []
-      OnClick = Panel5Click
+      OnClick = pnlExportarJSONClick
     end
   end
   object FDMemTable1: TFDMemTable
