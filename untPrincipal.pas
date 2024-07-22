@@ -8,7 +8,8 @@ uses
   FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client, Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls, Vcl.StdCtrls,
-  Vcl.Samples.Spin, System.Generics.Collections;
+  Vcl.Samples.Spin, System.Generics.Collections, Xml.XMLDoc, Xml.XMLIntf,
+  REST.Json, System.IOUtils, System.JSON;
 
 type
   TfrmPrincipal = class(TForm)
@@ -25,11 +26,22 @@ type
     Label3: TLabel;
     Label4: TLabel;
     spnQtdColuna: TSpinEdit;
+    Panel2: TPanel;
+    Panel3: TPanel;
+    Panel4: TPanel;
+    Panel5: TPanel;
     procedure pnlGerarClick(Sender: TObject);
+    procedure Panel4Click(Sender: TObject);
+    procedure Panel5Click(Sender: TObject);
+    procedure Panel3Click(Sender: TObject);
   private
     { Private declarations }
     procedure CriarCamposMemTable;
     procedure GenerateRandomNumbersNew;
+
+    procedure ExportarParaCSV(memTable: TFDMemTable; const arquivoCSV: string);
+    procedure ExportarParaJSON(memTable: TFDMemTable; const arquivoJSON: string);
+    procedure ExportarParaXML(memTable: TFDMemTable; const arquivoXML: string);
   public
     { Public declarations }
   end;
@@ -73,6 +85,75 @@ begin
     FDMemTable1.Fields[I].DisplayWidth := 5;
     FDMemTable1.Fields[I].Alignment    := taCenter;
   end;
+end;
+
+procedure TfrmPrincipal.ExportarParaCSV(memTable: TFDMemTable;
+  const arquivoCSV: string);
+var
+  csvFile: TextFile;
+  i, j: Integer;
+begin
+  AssignFile(csvFile, arquivoCSV);
+  Rewrite(csvFile);
+
+  // Escreve cabeçalho (nomes dos campos)
+  for i := 0 to memTable.FieldCount - 1 do
+  begin
+    Write(csvFile, '"' + memTable.Fields[i].FieldName + '"');
+    if i < memTable.FieldCount - 1 then
+      Write(csvFile, ',');
+  end;
+  WriteLn(csvFile);
+
+  // Escreve os dados
+  memTable.First;
+  while not memTable.Eof do
+  begin
+    for i := 0 to memTable.FieldCount - 1 do
+    begin
+      Write(csvFile, '"' + memTable.Fields[i].AsString + '"');
+      if i < memTable.FieldCount - 1 then
+        Write(csvFile, ',');
+    end;
+    WriteLn(csvFile);
+    memTable.Next;
+  end;
+
+  CloseFile(csvFile);
+end;
+procedure TfrmPrincipal.ExportarParaJSON(memTable: TFDMemTable;
+  const arquivoJSON: string);
+var
+  jsonString: string;
+begin
+  jsonString := TJson.ObjectToJsonString(memTable);
+  TFile.WriteAllText(arquivoJSON, jsonString);
+end;
+
+procedure TfrmPrincipal.ExportarParaXML(memTable: TFDMemTable;
+  const arquivoXML: string);
+var
+  xmlDoc: IXMLDocument;
+  root, rowNode, fieldNode: IXMLNode;
+  i: Integer;
+begin
+  xmlDoc := TXMLDocument.Create(nil);
+  xmlDoc.Active := True;
+
+  root := xmlDoc.AddChild('Data');
+  memTable.First;
+  while not memTable.Eof do
+  begin
+    rowNode := root.AddChild('Row');
+    for i := 0 to memTable.FieldCount - 1 do
+    begin
+      fieldNode := rowNode.AddChild(memTable.Fields[i].FieldName);
+      fieldNode.Text := memTable.Fields[i].AsString;
+    end;
+    memTable.Next;
+  end;
+
+  xmlDoc.SaveToFile(arquivoXML);
 end;
 
 procedure TfrmPrincipal.GenerateRandomNumbersNew;
@@ -125,14 +206,17 @@ begin
         end;
       end;
 
+      // Ordena os números gerados para esta linha
+      Numbers.Sort;
+
       // Adiciona uma nova linha ao FDMemTable
       FDMemTable1.Append;
 
-      // Preenche as colunas com os números gerados
+      // Preenche as colunas com os números ordenados gerados
       for J := 0 to Numbers.Count - 1 do
       begin
         if J < FDMemTable1.FieldCount then
-          FDMemTable1.Fields[J].AsString := Format('%2.2d',[Numbers[J]]);
+          FDMemTable1.Fields[J].AsString := Format('%2.2d', [Numbers[J]]);
       end;
 
       FDMemTable1.Post;
@@ -141,6 +225,21 @@ begin
     Numbers.Free;
     UsedNumbers.Free;
   end;
+end;
+
+procedure TfrmPrincipal.Panel3Click(Sender: TObject);
+begin
+  ExportarParaXML(FDMemTable1, GetCurrentDir+'\numeros.xml');
+end;
+
+procedure TfrmPrincipal.Panel4Click(Sender: TObject);
+begin
+  ExportarParaCSV(FDMemTable1, GetCurrentDir+'\numeros.csv');
+end;
+
+procedure TfrmPrincipal.Panel5Click(Sender: TObject);
+begin
+  ExportarParaJSON(FDMemTable1, GetCurrentDir+'\numeros.json');
 end;
 
 procedure TfrmPrincipal.pnlGerarClick(Sender: TObject);

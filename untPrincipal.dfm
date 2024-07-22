@@ -1,7 +1,7 @@
 object frmPrincipal: TfrmPrincipal
   Left = 0
   Top = 0
-  Caption = 'Gerar Aposta'
+  Caption = 'Gerador de N'#250'meros Aleat'#243'rios'
   ClientHeight = 441
   ClientWidth = 934
   Color = clWhite
@@ -116,7 +116,7 @@ object frmPrincipal: TfrmPrincipal
     Left = 3
     Top = 73
     Width = 928
-    Height = 365
+    Height = 324
     Align = alClient
     DataSource = DataSource1
     DrawingStyle = gdsClassic
@@ -127,6 +127,85 @@ object frmPrincipal: TfrmPrincipal
     TitleFont.Height = -12
     TitleFont.Name = 'Segoe UI'
     TitleFont.Style = []
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 400
+    Width = 934
+    Height = 41
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 2
+    ExplicitLeft = 560
+    ExplicitTop = 192
+    ExplicitWidth = 185
+    object Panel3: TPanel
+      AlignWithMargins = True
+      Left = 781
+      Top = 3
+      Width = 150
+      Height = 35
+      Cursor = crHandPoint
+      Align = alRight
+      BevelOuter = bvNone
+      Caption = 'Exportar .XML'
+      Color = 8421440
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWhite
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = [fsBold]
+      ParentBackground = False
+      ParentFont = False
+      TabOrder = 0
+      StyleElements = []
+      OnClick = Panel3Click
+    end
+    object Panel4: TPanel
+      AlignWithMargins = True
+      Left = 469
+      Top = 3
+      Width = 150
+      Height = 35
+      Cursor = crHandPoint
+      Align = alRight
+      BevelOuter = bvNone
+      Caption = 'Exportar .CSV'
+      Color = 8421440
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWhite
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = [fsBold]
+      ParentBackground = False
+      ParentFont = False
+      TabOrder = 1
+      StyleElements = []
+      OnClick = Panel4Click
+      ExplicitLeft = 625
+    end
+    object Panel5: TPanel
+      AlignWithMargins = True
+      Left = 625
+      Top = 3
+      Width = 150
+      Height = 35
+      Cursor = crHandPoint
+      Align = alRight
+      BevelOuter = bvNone
+      Caption = 'Exportar .JSON'
+      Color = 8421440
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWhite
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = [fsBold]
+      ParentBackground = False
+      ParentFont = False
+      TabOrder = 2
+      StyleElements = []
+      OnClick = Panel5Click
+    end
   end
   object FDMemTable1: TFDMemTable
     FieldDefs = <>
