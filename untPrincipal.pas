@@ -9,7 +9,7 @@ uses
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client, Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls, Vcl.StdCtrls,
   Vcl.Samples.Spin, System.Generics.Collections, Xml.XMLDoc, Xml.XMLIntf,
-  REST.Json, System.IOUtils, System.JSON;
+  REST.Json, System.IOUtils, System.JSON, ComObj;
 
 type
   TfrmPrincipal = class(TForm)
@@ -39,7 +39,7 @@ type
     procedure CriarCamposMemTable;
     procedure GenerateRandomNumbersNew;
 
-    procedure ExportarParaCSV(memTable: TFDMemTable; const arquivoCSV: string);
+    procedure ExportarParaXLS(memTable: TFDMemTable; const arquivoCSV: string);
     procedure ExportarParaJSON(memTable: TFDMemTable; const arquivoJSON: string);
     procedure ExportarParaXML(memTable: TFDMemTable; const arquivoXML: string);
   public
@@ -87,40 +87,29 @@ begin
   end;
 end;
 
-procedure TfrmPrincipal.ExportarParaCSV(memTable: TFDMemTable;
+procedure TfrmPrincipal.ExportarParaXLS(memTable: TFDMemTable;
   const arquivoCSV: string);
 var
-  csvFile: TextFile;
-  i, j: Integer;
+  ExcApp: OleVariant;
+  i,l: integer;
 begin
-  AssignFile(csvFile, arquivoCSV);
-  Rewrite(csvFile);
-
-  // Escreve cabeçalho (nomes dos campos)
-  for i := 0 to memTable.FieldCount - 1 do
-  begin
-    Write(csvFile, '"' + memTable.Fields[i].FieldName + '"');
-    if i < memTable.FieldCount - 1 then
-      Write(csvFile, ',');
-  end;
-  WriteLn(csvFile);
-
-  // Escreve os dados
+  ExcApp := CreateOleObject('Excel.Application');
+  ExcApp.Visible := True;
+  ExcApp.WorkBooks.Add;
   memTable.First;
-  while not memTable.Eof do
+  l := 1;
+  memTable.First;
+  while not memTable.EOF do
   begin
-    for i := 0 to memTable.FieldCount - 1 do
-    begin
-      Write(csvFile, '"' + memTable.Fields[i].AsString + '"');
-      if i < memTable.FieldCount - 1 then
-        Write(csvFile, ',');
-    end;
-    WriteLn(csvFile);
+    for i := 0 to memTable.Fields.Count - 1 do
+      ExcApp.WorkBooks[1].Sheets[1].Cells[l,i + 1] :=
+        memTable.Fields[i].DisplayText;
     memTable.Next;
+    l := l + 1;
   end;
-
-  CloseFile(csvFile);
+  ExcApp.WorkBooks[1].SaveAs(arquivoCSV);
 end;
+
 procedure TfrmPrincipal.ExportarParaJSON(memTable: TFDMemTable;
   const arquivoJSON: string);
 var
@@ -234,7 +223,7 @@ end;
 
 procedure TfrmPrincipal.Panel4Click(Sender: TObject);
 begin
-  ExportarParaCSV(FDMemTable1, GetCurrentDir+'\numeros.csv');
+  ExportarParaXLS(FDMemTable1, GetCurrentDir+'\numeros.xls');
 end;
 
 procedure TfrmPrincipal.Panel5Click(Sender: TObject);
