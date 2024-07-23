@@ -9,7 +9,7 @@ uses
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Comp.DataSet,
   FireDAC.Comp.Client, Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls, Vcl.StdCtrls,
   Vcl.Samples.Spin, System.Generics.Collections, Xml.XMLDoc, Xml.XMLIntf,
-  ComObj, DataSet.Serialize, System.JSON, Vcl.CheckLst;
+  ComObj, DataSet.Serialize, System.JSON, Vcl.CheckLst, DataSet.Serialize.Config;
 
 type
   TfrmPrincipal = class(TForm)
@@ -30,6 +30,8 @@ type
     pnlExportarXML: TPanel;
     pnlExportarCSV: TPanel;
     pnlExportarJSON: TPanel;
+    pnlImportar: TPanel;
+    OpenDialog1: TOpenDialog;
     procedure pnlGerarClick(Sender: TObject);
     procedure pnlExportarCSVClick(Sender: TObject);
     procedure pnlExportarJSONClick(Sender: TObject);
@@ -37,9 +39,12 @@ type
     procedure DBGrid1CellClick(Column: TColumn);
     procedure DBGrid1DrawColumnCell(Sender: TObject; const Rect: TRect;
       DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure FormCreate(Sender: TObject);
+    procedure pnlImportarClick(Sender: TObject);
   private
     { Private declarations }
     procedure CriarCamposMemTable;
+    procedure AlterarDisplayCamposMemTable;
     procedure GenerateRandomNumbersNew;
 
     procedure ExportarParaXLS(memTable: TFDMemTable; const arquivoCSV: string);
@@ -57,6 +62,27 @@ implementation
 {$R *.dfm}
 
 { TForm1 }
+
+procedure TfrmPrincipal.AlterarDisplayCamposMemTable;
+var
+  I: Integer;
+begin
+  // Mudar o nome dos campos já criados
+  for I := 0 to FDMemTable1.FieldCount - 1 do
+  begin
+    if I = 0 then
+    begin
+      FDMemTable1.Fields[I].DisplayLabel := 'Utilizado';
+      FDMemTable1.Fields[I].Alignment    := taCenter;
+    end
+    else
+    begin
+      FDMemTable1.Fields[I].DisplayLabel := (I).ToString + '°';
+      FDMemTable1.Fields[I].DisplayWidth := 5;
+      FDMemTable1.Fields[I].Alignment    := taCenter;
+    end;
+  end;
+end;
 
 procedure TfrmPrincipal.CriarCamposMemTable;
 var
@@ -83,21 +109,7 @@ begin
   // Definir a estrutura da tabela em memória
   FDMemTable1.CreateDataSet;
 
-  // Mudar o nome dos campos já criados
-  for I := 0 to FDMemTable1.FieldCount - 1 do
-  begin
-    if I = 0 then
-    begin
-      FDMemTable1.Fields[I].DisplayLabel := 'Utilizado';
-      FDMemTable1.Fields[I].Alignment    := taCenter;
-    end
-    else
-    begin
-      FDMemTable1.Fields[I].DisplayLabel := (I).ToString + '°';
-      FDMemTable1.Fields[I].DisplayWidth := 5;
-      FDMemTable1.Fields[I].Alignment    := taCenter;
-    end;
-  end;
+  AlterarDisplayCamposMemTable;
 end;
 
 procedure TfrmPrincipal.ExportarParaXLS(memTable: TFDMemTable;
@@ -222,6 +234,13 @@ begin
   xmlDoc.SaveToFile(arquivoXML);
 end;
 
+procedure TfrmPrincipal.FormCreate(Sender: TObject);
+begin
+  //configurações do dataset.serialize para apresentar os campos de maneira correta
+  TDataSetSerializeConfig.GetInstance.CaseNameDefinition := cndLower;
+  TDataSetSerializeConfig.GetInstance.Import.DecimalSeparator := '.';
+end;
+
 procedure TfrmPrincipal.GenerateRandomNumbersNew;
 var
   MinValue: Integer;
@@ -319,6 +338,32 @@ procedure TfrmPrincipal.pnlGerarClick(Sender: TObject);
 begin
   CriarCamposMemTable;
   GenerateRandomNumbersNew;
+end;
+
+procedure TfrmPrincipal.pnlImportarClick(Sender: TObject);
+var
+  Arquivo: TStringList;
+begin
+  OpenDialog1.FileName := '';
+  if OpenDialog1.Execute then
+    if OpenDialog1.FileName <> '' then
+    begin
+      Arquivo := TStringList.Create;
+      try
+        Arquivo.LoadFromFile(OpenDialog1.FileName);
+        if Trim(Arquivo.Text) <> '' then
+        begin
+          FDMemTable1.Close;
+          FDMemTable1.LoadFromJSON(Arquivo.Text);
+
+          AlterarDisplayCamposMemTable;
+
+          FDMemTable1.Open;
+        end;
+      finally
+        Arquivo.Free;
+      end;
+    end;
 end;
 
 end.

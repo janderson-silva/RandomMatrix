@@ -10,6 +10,7 @@ object frmPrincipal: TfrmPrincipal
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
+  OnCreate = FormCreate
   TextHeight = 15
   object Panel1: TPanel
     Left = 0
@@ -50,18 +51,20 @@ object frmPrincipal: TfrmPrincipal
     end
     object pnlGerar: TPanel
       AlignWithMargins = True
-      Left = 781
-      Top = 3
-      Width = 150
-      Height = 64
+      Left = 625
+      Top = 25
+      Width = 120
+      Height = 35
       Cursor = crHandPoint
+      Margins.Top = 25
+      Margins.Bottom = 10
       Align = alRight
       BevelOuter = bvNone
       Caption = 'Gerar'
       Color = 8421440
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWhite
-      Font.Height = -27
+      Font.Height = -16
       Font.Name = 'Segoe UI'
       Font.Style = [fsBold]
       ParentBackground = False
@@ -69,6 +72,7 @@ object frmPrincipal: TfrmPrincipal
       TabOrder = 0
       StyleElements = []
       OnClick = pnlGerarClick
+      ExplicitLeft = 605
     end
     object spnQtdReg: TSpinEdit
       Left = 100
@@ -109,6 +113,31 @@ object frmPrincipal: TfrmPrincipal
       MinValue = 0
       TabOrder = 4
       Value = 25
+    end
+    object pnlImportar: TPanel
+      AlignWithMargins = True
+      Left = 751
+      Top = 25
+      Width = 180
+      Height = 35
+      Cursor = crHandPoint
+      Margins.Top = 25
+      Margins.Bottom = 10
+      Align = alRight
+      BevelOuter = bvNone
+      Caption = 'Importar .JSON'
+      Color = 8421440
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWhite
+      Font.Height = -16
+      Font.Name = 'Segoe UI'
+      Font.Style = [fsBold]
+      ParentBackground = False
+      ParentFont = False
+      TabOrder = 5
+      StyleElements = []
+      OnClick = pnlImportarClick
+      ExplicitLeft = 711
     end
   end
   object DBGrid1: TDBGrid
@@ -223,5 +252,9 @@ object frmPrincipal: TfrmPrincipal
     DataSet = FDMemTable1
     Left = 328
     Top = 272
+  end
+  object OpenDialog1: TOpenDialog
+    Left = 488
+    Top = 216
   end
 end
