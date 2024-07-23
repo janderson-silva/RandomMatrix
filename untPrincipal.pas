@@ -343,6 +343,11 @@ end;
 procedure TfrmPrincipal.pnlImportarClick(Sender: TObject);
 var
   Arquivo: TStringList;
+  JSONArray: TJSONArray;
+  JSONObject: TJSONObject;
+  JSONValue: TJSONValue;
+  I, J: Integer;
+  FieldName: string;
 begin
   OpenDialog1.FileName := '';
   if OpenDialog1.Execute then
@@ -354,11 +359,62 @@ begin
         if Trim(Arquivo.Text) <> '' then
         begin
           FDMemTable1.Close;
-          FDMemTable1.LoadFromJSON(Arquivo.Text);
 
-          AlterarDisplayCamposMemTable;
+          // Carrega o JSON
+          JSONValue := TJSONObject.ParseJSONValue(Arquivo.Text);
+          if JSONValue is TJSONArray then
+          begin
+            JSONArray := JSONValue as TJSONArray;
 
-          FDMemTable1.Open;
+            // Limpa os campos existentes
+            FDMemTable1.FieldDefs.Clear;
+
+            // Adiciona o campo 'Utilizado'
+            FDMemTable1.FieldDefs.Add('Utilizado', ftBoolean);
+
+            // Adiciona os campos sequenciais do JSON
+            if JSONArray.Count > 0 then
+            begin
+              JSONObject := JSONArray.Items[0] as TJSONObject;
+
+              // Itera sobre as chaves do primeiro item para adicionar os campos
+              for I := 0 to JSONObject.Size - 1 do
+              begin
+                FieldName := JSONObject.Pairs[I].JsonString.Value;
+
+                // Adiciona o campo se não for 'Utilizado'
+                if FieldName <> 'utilizado' then
+                  FDMemTable1.FieldDefs.Add(FieldName, ftString, 2, False);
+              end;
+            end;
+
+            FDMemTable1.CreateDataSet;
+
+            // Carrega os dados do JSON para o TFDMemTable
+            for I := 0 to JSONArray.Count - 1 do
+            begin
+              JSONObject := JSONArray.Items[I] as TJSONObject;
+
+              FDMemTable1.Append;
+              for J := 0 to JSONObject.Size - 1 do
+              begin
+                FieldName := JSONObject.Pairs[J].JsonString.Value;
+                if FieldName = 'utilizado' then
+                  FDMemTable1.FieldByName('Utilizado').AsBoolean :=
+                    JSONObject.Pairs[J].JsonValue.Value.ToBoolean
+                else
+                  FDMemTable1.FieldByName(FieldName).AsString :=
+                    JSONObject.Pairs[J].JsonValue.Value;
+              end;
+              FDMemTable1.Post;
+            end;
+
+            // Altera o display dos campos
+            AlterarDisplayCamposMemTable;
+
+            // Abre o FDMemTable1
+            FDMemTable1.Open;
+          end;
         end;
       finally
         Arquivo.Free;

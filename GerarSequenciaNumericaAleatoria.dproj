@@ -70,6 +70,7 @@
         <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
         <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
         <SanitizedProjectName>GerarSequenciaNumericaAleatoria</SanitizedProjectName>
+        <Custom_Styles>&quot;Onyx Blue|VCLSTYLE|$(BDSCOMMONDIR)\Styles\OnyxBlue.vsf&quot;</Custom_Styles>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_UsePackage>vclwinx;DataSnapServer;ACBr_BPeDabpeESCPOS;ACBr_TCP;ACBr_ONE;fmx;vclie;DbxCommonDriver;bindengine;IndyIPCommon;VCLRESTComponents;DBXMSSQLDriver;FireDACCommonODBC;emsclient;FMXfrCoreLibrary29;ACBr_OpenSSL;appanalytics;IndyProtocols;vclx;Skia.Package.RTL;dbxcds;vcledge;FmxTeeUI;DBXFirebirdDriver;ACBr_CTeDacteFR;ACBr_NFCeECFVirtual;FireDACSqliteDriver;DbxClientDriver;soapmidas;ACBr_NF3eDANF3eESCPOS;TeeUI;frCoreLibrary29;ACBr_PagFor;dbexpress;ACBr_Reinf;ACBr_NFSeXDanfseFPDF;inet;ACBr_BoletoFPDF;vcltouch;FireDACDBXDriver;fmxdae;CustomIPTransport;FireDACMSSQLDriver;ACBr_NFSeX;C4DWizard;ACBr_NFe;IndySystem;ACBr_Diversos;frxe29;ACBr_SAT;ibxbindings;ACBr_CIOT;ACBr_TEFD;vclFireDAC;ACBr_SPED;ACBr_CTe;ACBr_SATWS;FireDACCommon;DataSnapServerMidas;FireDACODBCDriver;emsserverresource;ACBr_SEF2;ACBr_LCDPR;DOSCommandDR;bindcompdbx;frxTee29;rtl;FireDACMySQLDriver;ACBr_NFeDanfeFR;ACBr_BPe;DBXSqliteDriver;ACBr_Sintegra;DBXSybaseASEDriver;ACBr_Serial;ACBr_Comum;ACBr_MDFe;ACBr_NFeDanfeESCPOS;vclimg;DataSnapFireDAC;inetdbxpress;FireDAC;xmlrtl;ibxpress;dsnap;FireDACDb2Driver;DBXOracleDriver;DBXInformixDriver;vclib;ACBr_SATECFVirtual;fmxobj;bindcompvclsmp;DataSnapNativeClient;frx29;ACBr_SATExtratoFR;DatasnapConnectorsFreePascal;ACBr_NF3e;ACBr_PAF;ACBr_OpenDelivery;ACBr_NFeDanfeFPDF;ACBr_MDFeDamdfeFR;ACBr_SPEDImportar;emshosting;frxDB29;frLocalizationLibrary29;FireDACCommonDriver;ACBr_ADRCST;ACBr_MTER;IndyIPClient;bindcompvclwinx;ACBr_Convenio115;ACBr_NFSeDanfseFR;emsedge;bindcompfmx;inetdb;ibmonitor;FireDACASADriver;ACBr_LFD;Tee;vclactnband;FMXfrxDB29;fmxFireDAC;FireDACInfxDriver;DBXMySQLDriver;VclSmp;ACBr_Ponto;DataSnapCommon;fmxase;DBXOdbcDriver;dbrtl;horse_wizard;FireDACOracleDriver;Skia.Package.FMX;ACBr_NFSe;TeeDB;ACBre_Social;FireDACMSAccDriver;DataSnapIndy10ServerTransport;DataSnapConnectors;ACBr_ANe;vcldsnap;DBXInterBaseDriver;FireDACMongoDBDriver;ACBR_DeSTDA;ACBr_GNRE;ACBr_EDI;FireDACTDataDriver;Skia.Package.VCL;vcldb;ACBr_Integrador;ACBr_PIXCD;ACBr_BoletoFR;bindcomp;IndyCore;RESTBackendComponents;FMXfrx29;FireDACADSDriver;RESTComponents;ACBr_NFSeXDANFSeFR;IndyIPServer;vcl;dsnapxml;adortl;dsnapcon;DataSnapClient;DataSnapProviderClient;DBXDb2Driver;ACBr_Boleto;emsclientfiredac;FireDACPgDriver;FireDACDSDriver;ACBr_BlocoX;ACBr_SATExtratoESCPOS;tethering;bindcompvcl;ACBr_GTIN;CloudService;DBXSybaseASADriver;ACBr_OFX;ACBr_PAFNFCe;FMXTee;ACBr_DebitoAutomatico;FMXfrLocalizationLibrary29;ACBr_GNREGuiaFR;soaprtl;soapserver;FireDACIBDriver;$(DCC_UsePackage)</DCC_UsePackage>
@@ -102,6 +103,8 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
@@ -146,6 +149,12 @@
                 <Source>
                     <Source Name="MainSource">GerarSequenciaNumericaAleatoria.dpr</Source>
                 </Source>
+                <Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\bcboffice2k290.bpl">Embarcadero C++Builder Office 2000 Servers Package</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\bcbofficexp290.bpl">Embarcadero C++Builder Office XP Servers Package</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k290.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp290.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="4">
                 <DeployFile LocalName="Win32\Debug\GerarSequenciaNumericaAleatoria.exe" Configuration="Debug" Class="ProjectOutput">

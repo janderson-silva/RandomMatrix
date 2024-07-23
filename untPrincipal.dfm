@@ -1,26 +1,29 @@
 object frmPrincipal: TfrmPrincipal
   Left = 0
   Top = 0
+  BorderStyle = bsSingle
   Caption = 'Gerador de N'#250'meros Aleat'#243'rios'
   ClientHeight = 441
-  ClientWidth = 934
+  ClientWidth = 984
   Color = clWhite
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
+  Position = poScreenCenter
   OnCreate = FormCreate
   TextHeight = 15
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 934
+    Width = 984
     Height = 70
     Align = alTop
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 0
+    ExplicitWidth = 934
     object Label1: TLabel
       Left = 100
       Top = 15
@@ -51,7 +54,7 @@ object frmPrincipal: TfrmPrincipal
     end
     object pnlGerar: TPanel
       AlignWithMargins = True
-      Left = 625
+      Left = 675
       Top = 25
       Width = 120
       Height = 35
@@ -61,7 +64,7 @@ object frmPrincipal: TfrmPrincipal
       Align = alRight
       BevelOuter = bvNone
       Caption = 'Gerar'
-      Color = 8421440
+      Color = 16744448
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWhite
       Font.Height = -16
@@ -72,7 +75,7 @@ object frmPrincipal: TfrmPrincipal
       TabOrder = 0
       StyleElements = []
       OnClick = pnlGerarClick
-      ExplicitLeft = 605
+      ExplicitLeft = 625
     end
     object spnQtdReg: TSpinEdit
       Left = 100
@@ -116,7 +119,7 @@ object frmPrincipal: TfrmPrincipal
     end
     object pnlImportar: TPanel
       AlignWithMargins = True
-      Left = 751
+      Left = 801
       Top = 25
       Width = 180
       Height = 35
@@ -126,7 +129,7 @@ object frmPrincipal: TfrmPrincipal
       Align = alRight
       BevelOuter = bvNone
       Caption = 'Importar .JSON'
-      Color = 8421440
+      Color = 16744448
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWhite
       Font.Height = -16
@@ -137,19 +140,19 @@ object frmPrincipal: TfrmPrincipal
       TabOrder = 5
       StyleElements = []
       OnClick = pnlImportarClick
-      ExplicitLeft = 711
+      ExplicitLeft = 751
     end
   end
   object DBGrid1: TDBGrid
     AlignWithMargins = True
     Left = 3
     Top = 73
-    Width = 928
+    Width = 978
     Height = 324
     Align = alClient
     DataSource = DataSource1
     DrawingStyle = gdsClassic
-    Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+    Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
     TabOrder = 1
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText
@@ -162,14 +165,15 @@ object frmPrincipal: TfrmPrincipal
   object Panel2: TPanel
     Left = 0
     Top = 400
-    Width = 934
+    Width = 984
     Height = 41
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitWidth = 934
     object pnlExportarXML: TPanel
       AlignWithMargins = True
-      Left = 781
+      Left = 831
       Top = 3
       Width = 150
       Height = 35
@@ -177,7 +181,7 @@ object frmPrincipal: TfrmPrincipal
       Align = alRight
       BevelOuter = bvNone
       Caption = 'Exportar .XML'
-      Color = 8421440
+      Color = 16744448
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWhite
       Font.Height = -16
@@ -188,10 +192,11 @@ object frmPrincipal: TfrmPrincipal
       TabOrder = 0
       StyleElements = []
       OnClick = pnlExportarXMLClick
+      ExplicitLeft = 781
     end
     object pnlExportarCSV: TPanel
       AlignWithMargins = True
-      Left = 469
+      Left = 519
       Top = 3
       Width = 150
       Height = 35
@@ -199,7 +204,7 @@ object frmPrincipal: TfrmPrincipal
       Align = alRight
       BevelOuter = bvNone
       Caption = 'Exportar .CSV'
-      Color = 8421440
+      Color = 16744448
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWhite
       Font.Height = -16
@@ -210,10 +215,11 @@ object frmPrincipal: TfrmPrincipal
       TabOrder = 1
       StyleElements = []
       OnClick = pnlExportarCSVClick
+      ExplicitLeft = 469
     end
     object pnlExportarJSON: TPanel
       AlignWithMargins = True
-      Left = 625
+      Left = 675
       Top = 3
       Width = 150
       Height = 35
@@ -221,7 +227,7 @@ object frmPrincipal: TfrmPrincipal
       Align = alRight
       BevelOuter = bvNone
       Caption = 'Exportar .JSON'
-      Color = 8421440
+      Color = 16744448
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWhite
       Font.Height = -16
@@ -232,6 +238,7 @@ object frmPrincipal: TfrmPrincipal
       TabOrder = 2
       StyleElements = []
       OnClick = pnlExportarJSONClick
+      ExplicitLeft = 625
     end
   end
   object FDMemTable1: TFDMemTable
