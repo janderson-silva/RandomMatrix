@@ -4,7 +4,8 @@ uses
   Vcl.Forms,
   untPrincipal in 'untPrincipal.pas' {frmPrincipal},
   Vcl.Themes,
-  Vcl.Styles;
+  Vcl.Styles,
+  untLogin in 'untLogin.pas' {frmLogin};
 
 {$R *.res}
 

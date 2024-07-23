@@ -23,7 +23,6 @@ object frmPrincipal: TfrmPrincipal
     BevelOuter = bvNone
     ParentColor = True
     TabOrder = 0
-    ExplicitWidth = 934
     object Label1: TLabel
       Left = 100
       Top = 15
@@ -75,7 +74,6 @@ object frmPrincipal: TfrmPrincipal
       TabOrder = 0
       StyleElements = []
       OnClick = pnlGerarClick
-      ExplicitLeft = 625
     end
     object spnQtdReg: TSpinEdit
       Left = 100
@@ -140,7 +138,6 @@ object frmPrincipal: TfrmPrincipal
       TabOrder = 5
       StyleElements = []
       OnClick = pnlImportarClick
-      ExplicitLeft = 751
     end
   end
   object DBGrid1: TDBGrid
@@ -170,7 +167,6 @@ object frmPrincipal: TfrmPrincipal
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitWidth = 934
     object pnlExportarXML: TPanel
       AlignWithMargins = True
       Left = 831
@@ -192,7 +188,6 @@ object frmPrincipal: TfrmPrincipal
       TabOrder = 0
       StyleElements = []
       OnClick = pnlExportarXMLClick
-      ExplicitLeft = 781
     end
     object pnlExportarCSV: TPanel
       AlignWithMargins = True
@@ -215,7 +210,6 @@ object frmPrincipal: TfrmPrincipal
       TabOrder = 1
       StyleElements = []
       OnClick = pnlExportarCSVClick
-      ExplicitLeft = 469
     end
     object pnlExportarJSON: TPanel
       AlignWithMargins = True
@@ -238,7 +232,6 @@ object frmPrincipal: TfrmPrincipal
       TabOrder = 2
       StyleElements = []
       OnClick = pnlExportarJSONClick
-      ExplicitLeft = 625
     end
   end
   object FDMemTable1: TFDMemTable

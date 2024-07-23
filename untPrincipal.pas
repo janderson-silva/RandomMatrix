@@ -59,6 +59,9 @@ var
 
 implementation
 
+uses
+  untLogin;
+
 {$R *.dfm}
 
 { TForm1 }
@@ -235,7 +238,17 @@ begin
 end;
 
 procedure TfrmPrincipal.FormCreate(Sender: TObject);
+var
+  FormAcesso: TfrmLogin;
 begin
+  FormAcesso := TfrmLogin.Create(nil);
+  try
+    if FormAcesso.ShowModal <> mrOk then
+      Application.Terminate; // Fecha a aplicação se o código de acesso não for correto
+  finally
+    FormAcesso.Free;
+  end;
+
   //configurações do dataset.serialize para apresentar os campos de maneira correta
   TDataSetSerializeConfig.GetInstance.CaseNameDefinition := cndLower;
   TDataSetSerializeConfig.GetInstance.Import.DecimalSeparator := '.';
