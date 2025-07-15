@@ -1,9 +1,52 @@
-**Objetivo:**
+# Gerador de Números Aleatórios com Exportação (Delphi)
 
-O projeto *RandomMatrix* visa desenvolver um sistema avançado para a geração de sequências numéricas aleatórias que atendam a dois critérios essenciais: garantir que não haja números repetidos em cada coluna e assegurar que as sequências sejam únicas em cada linha. O propósito é criar uma matriz numérica que minimize a repetição e maximize a aleatoriedade dentro de um conjunto definido de parâmetros.
+Este projeto Delphi gera registros com números aleatórios, permite visualização e exportação em formatos CSV, XML e JSON. Também é possível importar um arquivo JSON para popular os dados na tabela em memória.
 
-**Detalhes do Projeto:**
+## Funcionalidades
 
-- **Geração de Sequências:** O sistema criará sequências numéricas aleatórias dentro de um intervalo predefinido. Essas sequências serão dispostas em uma matriz onde cada coluna contém números únicos, sem repetições.
-  
-- **Unicidade por Linha e Coluna:** O projeto assegurará que cada número na matriz apareça apenas uma vez por coluna e que as sequências em cada linha sejam distintas entre si. Isso evita duplicação e garante uma disposição variada e imprevisível.
+✅ Geração de registros aleatórios com múltiplas colunas  
+✅ Marcação de registros como "Utilizado" com checkbox  
+✅ Exportação para:
+- 📁 XML
+- 📁 CSV (XLS - usando Excel via OLE Automation)
+- 📁 JSON
+
+✅ Importação de arquivos `.json`  
+✅ Visualização com cores personalizadas no `TDBGrid`  
+✅ Tela de login simples no início da aplicação
+
+## Componentes Utilizados
+
+- `TFDMemTable`, `TDBGrid`, `TSpinEdit`, `TOpenDialog`
+- `TPanel`, `TLabel`, `TForm`, `TCheckListBox`
+- Serialização com `DataSet.Serialize`
+
+## Estrutura do Código
+
+- **Geração de dados:**  
+  - `CriarCamposMemTable`: Cria campos dinamicamente baseado em `spnQtdColuna`  
+  - `GenerateRandomNumbersNew`: Gera números únicos por linha, com marcação "Utilizado"
+
+- **Exportação:**  
+  - `ExportarParaXML`, `ExportarParaJSON`, `ExportarParaXLS`  
+  - Os arquivos são salvos na pasta do executável (`numeros.xml`, `numeros.json`, `numeros.xls`)
+
+- **Importação:**  
+  - Lê arquivo `.json`, recria campos e importa dados no `TFDMemTable`
+
+## Observações
+
+- A exportação CSV usa automação do Excel (`CreateOleObject('Excel.Application')`), exigindo que o Excel esteja instalado.
+- O campo booleano "Utilizado" é destacado com cores no grid (verde para usado, vermelho para não usado).
+- O campo "Utilizado" é clicável diretamente no `TDBGrid`.
+
+## Requisitos
+
+- Delphi com FireDAC e DataSet.Serialize instalados
+- Excel instalado (para exportação XLS)
+- Compatível com VCL Windows
+
+## Créditos
+
+Autor: Janderson Silva  
+Dependência externa: [DataSet.Serialize](https://github.com/viniciussanchez/dataset-serialize)
